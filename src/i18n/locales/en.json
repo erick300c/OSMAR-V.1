@@ -1,0 +1,92 @@
+{
+  "common": {
+    "dashboard": "Dashboard",
+    "inventory": "Inventory",
+    "sales": "Sales",
+    "reports": "Reports",
+    "logout": "Logout",
+    "search": "Search",
+    "actions": "Actions",
+    "export": "Export Report",
+    "total": "Total",
+    "date": "Date",
+    "items": "Items",
+    "paymentMethod": "Payment Method",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "processing": "Processing...",
+    "loading": "Loading..."
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "totalSales": "Total Sales",
+    "revenue": "Revenue",
+    "lowStockItems": "Low Stock Items",
+    "growth": "Growth",
+    "weeklySales": "Weekly Sales"
+  },
+  "inventory": {
+    "title": "Inventory Management",
+    "addProduct": "Add Product",
+    "searchProducts": "Search products...",
+    "uploadImage": "Upload Image",
+    "fields": {
+      "name": "Product Name",
+      "category": "Category",
+      "subcategory": "Subcategory",
+      "barcode": "Barcode",
+      "costPrice": "Cost Price",
+      "sellingPrice": "Selling Price",
+      "quantity": "Quantity",
+      "supplier": "Supplier",
+      "minStockLevel": "Minimum Stock Level",
+      "unit": "Unit",
+      "imageUrl": "Product Image URL"
+    },
+    "units": {
+      "unit": "Unit",
+      "liter": "Liter",
+      "gram": "Gram"
+    },
+    "table": {
+      "product": "Product",
+      "category": "Category",
+      "quantity": "Quantity",
+      "price": "Price",
+      "status": "Status",
+      "actions": "Actions"
+    }
+  },
+  "sales": {
+    "title": "Sales",
+    "newSale": "New Sale",
+    "searchSales": "Search sales...",
+    "addItem": "Add Item",
+    "selectProduct": "Select a product",
+    "paymentMethods": {
+      "card": "Card",
+      "cash": "Cash",
+      "pix": "PIX"
+    }
+  },
+  "reports": {
+    "title": "Reports",
+    "monthlyRevenue": "Monthly Revenue",
+    "salesByCategory": "Sales by Category",
+    "revenueContribution": "Revenue Contribution",
+    "others": "Others",
+    "contribution": "Contribution"
+  },
+  "products": {
+    "categories": {
+      "beverages": "Beverages",
+      "tobacco": "Tobacco",
+      "accessories": "Accessories"
+    },
+    "status": {
+      "inStock": "In Stock",
+      "lowStock": "Low Stock",
+      "outOfStock": "Out of Stock"
+    }
+  }
+}

@@ -1,0 +1,131 @@
+{
+  "common": {
+    "dashboard": "Painel",
+    "inventory": "Estoque",
+    "sales": "Vendas",
+    "reports": "Relatórios",
+    "logout": "Sair",
+    "search": "Buscar",
+    "actions": "Ações",
+    "export": "Exportar Relatório",
+    "total": "Total",
+    "date": "Data",
+    "items": "Itens",
+    "paymentMethod": "Forma de Pagamento",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar",
+    "processing": "Processando...",
+    "loading": "Carregando...",
+    "currency": "R$"
+  },
+  "dashboard": {
+    "title": "Painel de Controle",
+    "totalSales": "Total de Vendas",
+    "numberOfSales": "Número de Vendas",
+    "revenue": "Faturamento",
+    "lowStockItems": "Itens com Estoque Baixo",
+    "netProfit": "Lucro Líquido",
+    "growth": "Crescimento",
+    "weeklySales": "Vendas Semanais",
+    "salesOverview": "Visão Geral das Vendas",
+    "filters": {
+      "daily": "Diário",
+      "weekly": "Semanal",
+      "monthly": "Mensal",
+      "yearly": "Anual",
+      "allTime": "Todo Período"
+    }
+  },
+  "inventory": {
+    "title": "Gerenciamento de Estoque",
+    "addProduct": "Adicionar Produto",
+    "editProduct": "Editar Produto",
+    "searchProducts": "Buscar produtos...",
+    "uploadImage": "Enviar Imagem",
+    "confirmDelete": "Tem certeza que deseja excluir este produto?",
+    "fields": {
+      "name": "Nome do Produto",
+      "category": "Categoria",
+      "subcategory": "Subcategoria",
+      "barcode": "Código de Barras",
+      "costPrice": "Preço de Custo",
+      "sellingPrice": "Preço de Venda",
+      "quantity": "Quantidade",
+      "supplier": "Fornecedor",
+      "minStockLevel": "Nível Mínimo de Estoque",
+      "unit": "Unidade",
+      "imageUrl": "URL da Imagem"
+    },
+    "units": {
+      "unit": "Unidade",
+      "liter": "Litro",
+      "gram": "Grama"
+    },
+    "table": {
+      "product": "Produto",
+      "category": "Categoria",
+      "quantity": "Quantidade",
+      "price": "Preço",
+      "status": "Status",
+      "actions": "Ações"
+    }
+  },
+  "sales": {
+    "title": "Vendas",
+    "newSale": "Nova Venda",
+    "editSale": "Editar Venda",
+    "searchSales": "Buscar vendas...",
+    "searchProduct": "Buscar produto...",
+    "addItem": "Adicionar Item",
+    "selectProduct": "Selecionar produto",
+    "confirmDelete": "Tem certeza que deseja excluir esta venda?",
+    "paymentMethods": {
+      "card": "Cartão",
+      "cash": "Dinheiro",
+      "pix": "PIX"
+    },
+    "filters": {
+      "allDates": "Todas as Datas",
+      "today": "Hoje",
+      "thisWeek": "Esta Semana",
+      "thisMonth": "Este Mês",
+      "allPayments": "Todas as Formas de Pagamento"
+    }
+  },
+  "reports": {
+    "title": "Relatórios",
+    "monthlyRevenue": "Faturamento Mensal",
+    "salesByCategory": "Vendas por Categoria",
+    "revenueContribution": "Contribuição no Faturamento",
+    "topProducts": "Produtos Mais Vendidos",
+    "stockAlerts": "Alertas de Estoque",
+    "others": "Outros",
+    "contribution": "Contribuição",
+    "filters": {
+      "allTime": "Todo Período",
+      "daily": "Diário",
+      "weekly": "Semanal",
+      "monthly": "Mensal"
+    }
+  },
+  "products": {
+    "categories": {
+      "beverages": "Bebidas",
+      "tobacco": "Tabaco",
+      "accessories": "Acessórios",
+      "snacks": "Lanches",
+      "others": "Outros"
+    },
+    "items": {
+      "brahma": "Cerveja BRAHMA",
+      "itaipava": "Cerveja Itaipava",
+      "cocacola": "Coca Cola 2L",
+      "rothmans": "Maço Rothmans"
+    },
+    "status": {
+      "inStock": "Em Estoque",
+      "lowStock": "Estoque Baixo",
+      "outOfStock": "Sem Estoque"
+    }
+  }
+}
