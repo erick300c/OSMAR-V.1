@@ -16,7 +16,8 @@
     "confirm": "Confirmar",
     "processing": "Processando...",
     "loading": "Carregando...",
-    "currency": "R$"
+    "currency": "R$",
+    "selectDateRange": "Selecionar período"
   },
   "dashboard": {
     "title": "Painel de Controle",
@@ -33,7 +34,8 @@
       "weekly": "Semanal",
       "monthly": "Mensal",
       "yearly": "Anual",
-      "allTime": "Todo Período"
+      "allTime": "Todo Período",
+      "custom": "Personalizado"
     }
   },
   "inventory": {
@@ -94,10 +96,29 @@
   },
   "reports": {
     "title": "Relatórios",
-    "monthlyRevenue": "Faturamento Mensal",
+    "timeFilter": {
+      "all": "Todo o período",
+      "daily": "Últimas 24 horas",
+      "weekly": "Últimos 7 dias",
+      "monthly": "Últimos 30 dias"
+    },
+    "monthlyRevenue": "Receita Mensal",
+    "categoryDistribution": "Distribuição por Categoria",
+    "revenueContribution": "Contribuição na Receita",
+    "consumptionAnalysis": "Análise de Consumo",
+    "sortedByQuantity": "Ordenado por quantidade sugerida",
+    "product": "Produto",
+    "dailyConsumption": "Consumo Diário",
+    "weeklyConsumption": "Consumo Semanal",
+    "monthlyConsumption": "Consumo Mensal",
+    "suggestedQuantity": "Quantidade Sugerida",
+    "trend": "Tendência",
+    "trends": {
+      "subindo": "Em alta",
+      "estavel": "Estável",
+      "descendo": "Em baixa"
+    },
     "salesByCategory": "Vendas por Categoria",
-    "revenueContribution": "Contribuição no Faturamento",
-    "topProducts": "Produtos Mais Vendidos",
     "stockAlerts": "Alertas de Estoque",
     "others": "Outros",
     "contribution": "Contribuição",
@@ -114,6 +135,7 @@
       "tobacco": "Tabaco",
       "accessories": "Acessórios",
       "snacks": "Lanches",
+      "foodAndSweets": "Comidas e Doces",
       "others": "Outros"
     },
     "items": {

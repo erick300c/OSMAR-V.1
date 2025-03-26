@@ -13,6 +13,7 @@ interface SaleItem {
   productId: string;
   quantity: number;
   priceAtSale: number;
+  productName?: string;
 }
 
 const NewSaleModal: React.FC<NewSaleModalProps> = ({ isOpen, onClose }) => {
@@ -42,8 +43,9 @@ const NewSaleModal: React.FC<NewSaleModalProps> = ({ isOpen, onClose }) => {
       const product = products.find(p => p.id === value);
       newItems[index] = {
         ...newItems[index],
-        [field]: value,
-        priceAtSale: product?.selling_price || 0
+        [field]: value as string,
+        priceAtSale: product?.selling_price || 0,
+        productName: product?.name
       };
     } else {
       newItems[index] = { ...newItems[index], [field]: value };
@@ -109,14 +111,19 @@ const NewSaleModal: React.FC<NewSaleModalProps> = ({ isOpen, onClose }) => {
                       <div className="relative">
                         <input
                           type="text"
-                          value={searchTerms[index]}
-                          onChange={(e) => updateSearch(index, e.target.value)}
+                          value={item.productId ? item.productName || '' : searchTerms[index]}
+                          onChange={(e) => {
+                            if (!item.productId) {
+                              updateSearch(index, e.target.value);
+                            }
+                          }}
                           placeholder={t('sales.searchProduct')}
                           className="w-full rounded-lg border-gray-300 shadow-sm pr-8"
+                          readOnly={!!item.productId}
                         />
                         <Search className="absolute right-2 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
                       </div>
-                      {searchTerms[index] && (
+                      {searchTerms[index] && !item.productId && (
                         <div className="absolute z-10 w-full mt-1 bg-white rounded-md shadow-lg max-h-60 overflow-auto">
                           {getFilteredProducts(searchTerms[index]).map((product) => (
                             <button
@@ -125,7 +132,7 @@ const NewSaleModal: React.FC<NewSaleModalProps> = ({ isOpen, onClose }) => {
                               className="w-full text-left px-4 py-2 hover:bg-gray-100"
                               onClick={() => {
                                 updateItem(index, 'productId', product.id);
-                                updateSearch(index, product.name);
+                                updateSearch(index, '');
                               }}
                             >
                               <div className="font-medium">{product.name}</div>

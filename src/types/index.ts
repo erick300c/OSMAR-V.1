@@ -1,7 +1,7 @@
 export interface Product {
   id: string;
   name: string;
-  category: 'beverages' | 'tobacco' | 'accessories';
+  category: 'beverages' | 'tobacco' | 'accessories' | 'snacks' | 'foodAndSweets';
   subcategory: string;
   barcode: string;
   cost_price: number;

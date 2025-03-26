@@ -12,7 +12,19 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose }) =>
   const { t } = useTranslation();
   const { createProduct } = useProducts();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<{
+    name: string;
+    category: 'beverages' | 'tobacco' | 'accessories' | 'snacks' | 'foodAndSweets';
+    subcategory: string;
+    barcode: string;
+    cost_price: string;
+    selling_price: string;
+    quantity: string;
+    supplier: string;
+    min_stock_level: string;
+    unit: 'unit' | 'liter' | 'gram';
+    image_url: string;
+  }>({
     name: '',
     category: 'beverages',
     subcategory: '',
@@ -39,7 +51,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose }) =>
       setIsSubmitting(true);
       await createProduct({
         name: formData.name,
-        category: formData.category as 'beverages' | 'tobacco' | 'accessories',
+        category: formData.category as 'beverages' | 'tobacco' | 'accessories' | 'snacks' | 'foodAndSweets',
         subcategory: formData.subcategory,
         barcode: formData.barcode,
         cost_price: Number(formData.cost_price),
@@ -98,6 +110,8 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose }) =>
                 <option value="beverages">{t('products.categories.beverages')}</option>
                 <option value="tobacco">{t('products.categories.tobacco')}</option>
                 <option value="accessories">{t('products.categories.accessories')}</option>
+                <option value="snacks">{t('products.categories.snacks')}</option>
+                <option value="foodAndSweets">{t('products.categories.foodAndSweets')}</option>
               </select>
             </div>
 

@@ -4,6 +4,7 @@ import { Search, Plus, Edit2, Trash2 } from 'lucide-react';
 import { useSales } from '../hooks/useSales';
 import NewSaleModal from '../components/NewSaleModal';
 import EditSaleModal from '../components/EditSaleModal';
+import DateRangePicker from '../components/DateRangePicker';
 import { Sale } from '../types';
 
 const Sales = () => {
@@ -12,9 +13,46 @@ const Sales = () => {
   const [isNewSaleModalOpen, setIsNewSaleModalOpen] = useState(false);
   const [isEditSaleModalOpen, setIsEditSaleModalOpen] = useState(false);
   const [selectedSale, setSelectedSale] = useState<Sale | null>(null);
-  const [dateFilter, setDateFilter] = useState('all');
+  const [startDate, setStartDate] = useState<Date | null>(null);
+  const [endDate, setEndDate] = useState<Date | null>(null);
+  const [selectedPeriod, setSelectedPeriod] = useState('all');
   const [paymentFilter, setPaymentFilter] = useState('all');
   const { sales, loading, deleteSale } = useSales();
+
+  const handlePeriodChange = (period: string) => {
+    setSelectedPeriod(period);
+    const now = new Date();
+    
+    if (period !== 'custom') {
+      let start: Date | null = null;
+      let end: Date | null = null;
+
+      switch (period) {
+        case 'daily':
+          start = new Date(now.setHours(0, 0, 0, 0));
+          end = new Date(now.setHours(23, 59, 59, 999));
+          break;
+        case 'weekly':
+          start = new Date(now.setDate(now.getDate() - now.getDay()));
+          end = new Date(now.setDate(now.getDate() + 6));
+          break;
+        case 'monthly':
+          start = new Date(now.getFullYear(), now.getMonth(), 1);
+          end = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+          break;
+        case 'yearly':
+          start = new Date(now.getFullYear(), 0, 1);
+          end = new Date(now.getFullYear(), 11, 31);
+          break;
+        default:
+          start = null;
+          end = null;
+      }
+
+      setStartDate(start);
+      setEndDate(end);
+    }
+  };
 
   const handleDelete = async (id: string) => {
     if (window.confirm(t('sales.confirmDelete'))) {
@@ -37,12 +75,7 @@ const Sales = () => {
     ) || sale?.id?.toLowerCase().includes(searchTerm.toLowerCase());
 
     const saleDate = new Date(sale.created_at);
-    const now = new Date();
-    const isDateMatch = dateFilter === 'all' || (
-      dateFilter === 'today' ? saleDate.toDateString() === now.toDateString() :
-      dateFilter === 'week' ? saleDate >= new Date(now.getTime() - (7 * 24 * 60 * 60 * 1000)) :
-      dateFilter === 'month' ? saleDate.getMonth() === now.getMonth() : true
-    );
+    const isDateMatch = !startDate || !endDate || (saleDate >= startDate && saleDate <= endDate);
 
     const isPaymentMatch = paymentFilter === 'all' || sale.payment_method === paymentFilter;
 
@@ -83,16 +116,16 @@ const Sales = () => {
         </div>
 
         <div className="flex gap-4">
-          <select
-            value={dateFilter}
-            onChange={(e) => setDateFilter(e.target.value)}
-            className="rounded-lg border-gray-300 shadow-sm"
-          >
-            <option value="all">{t('sales.filters.allDates')}</option>
-            <option value="today">{t('sales.filters.today')}</option>
-            <option value="week">{t('sales.filters.thisWeek')}</option>
-            <option value="month">{t('sales.filters.thisMonth')}</option>
-          </select>
+          <DateRangePicker
+            startDate={startDate}
+            endDate={endDate}
+            selectedPeriod={selectedPeriod}
+            onChange={(dates) => {
+              setStartDate(dates[0]);
+              setEndDate(dates[1]);
+            }}
+            onPeriodChange={handlePeriodChange}
+          />
 
           <select
             value={paymentFilter}

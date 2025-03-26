@@ -5,6 +5,7 @@ import { DollarSign, ShoppingCart, AlertTriangle, TrendingUp, LucideIcon } from 
 import { useSales } from '../hooks/useSales';
 import { useProducts } from '../hooks/useProducts';
 import { Sale } from '../types';
+import DateRangePicker from '../components/DateRangePicker';
 
 interface StatCardProps {
   title: string;
@@ -54,16 +55,76 @@ const Dashboard = () => {
   const { t } = useTranslation();
   const { sales } = useSales();
   const { products } = useProducts();
-  const [timeFilter, setTimeFilter] = useState('daily');
+  
+  // Inicializa com o período diário
+  const now = new Date();
+  const [selectedPeriod, setSelectedPeriod] = useState('daily');
+  const [startDate, setStartDate] = useState<Date | null>(new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0));
+  const [endDate, setEndDate] = useState<Date | null>(new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59));
+  
   const [salesData, setSalesData] = useState<{ [key: string]: number }>({});
   const [totalSales, setTotalSales] = useState(0);
   const [numberOfSales, setNumberOfSales] = useState(0);
   const [lowStockItems, setLowStockItems] = useState(0);
   const [netProfit, setNetProfit] = useState(0);
 
+  const handlePeriodChange = (period: string) => {
+    setSelectedPeriod(period);
+    const currentDate = new Date();
+    
+    if (period !== 'custom') {
+      let start: Date | null = null;
+      let end: Date | null = null;
+
+      switch (period) {
+        case 'daily':
+          start = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), 0, 0, 0);
+          end = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), 23, 59, 59);
+          break;
+        case 'weekly':
+          start = new Date(currentDate);
+          start.setDate(currentDate.getDate() - currentDate.getDay());
+          start.setHours(0, 0, 0, 0);
+          end = new Date(start);
+          end.setDate(start.getDate() + 6);
+          end.setHours(23, 59, 59, 999);
+          break;
+        case 'monthly':
+          start = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1, 0, 0, 0);
+          end = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0, 23, 59, 59);
+          break;
+        case 'yearly':
+          start = new Date(currentDate.getFullYear(), 0, 1, 0, 0, 0);
+          end = new Date(currentDate.getFullYear(), 11, 31, 23, 59, 59);
+          break;
+        default:
+          start = null;
+          end = null;
+      }
+
+      setStartDate(start);
+      setEndDate(end);
+    }
+  };
+
+  const isSameDay = (date1: Date | null, date2: Date | null): boolean => {
+    if (!date1 || !date2) return false;
+    return (
+      date1.getFullYear() === date2.getFullYear() &&
+      date1.getMonth() === date2.getMonth() &&
+      date1.getDate() === date2.getDate()
+    );
+  };
+
+  const isOneDayView = (start: Date | null, end: Date | null, period: string): boolean => {
+    if (period === 'daily') return true;
+    if (!start || !end) return false;
+    return isSameDay(start, end);
+  };
+
   useEffect(() => {
     if (sales && products) {
-      const filteredSales = filterSalesByTime(sales as Sale[]);
+      const filteredSales = filterSalesByDateRange(sales as Sale[]);
       
       // Calcular total de vendas e número de vendas
       const total = filteredSales.reduce((sum, sale) => sum + Number(sale.total), 0);
@@ -91,13 +152,16 @@ const Dashboard = () => {
       ).length;
       setLowStockItems(lowStock);
 
+      // Verificar se é visualização de um único dia
+      const showHourlyView = isOneDayView(startDate, endDate, selectedPeriod);
+
       // Processar dados de vendas por período
       const salesByDate = filteredSales.reduce<SalesData>((acc, sale) => {
         const date = new Date(sale.created_at);
         let key;
         
-        if (timeFilter === 'daily') {
-          // Para visualização diária, agrupar por hora inteira
+        if (showHourlyView) {
+          // Para visualização de um dia, agrupar por hora
           const hour = date.getHours();
           key = `${hour.toString().padStart(2, '0')}:00`;
         } else {
@@ -109,43 +173,55 @@ const Dashboard = () => {
         return acc;
       }, {});
 
-      // Ordenar os dados por hora quando estiver no modo diário
-      if (timeFilter === 'daily') {
-        const sortedData: SalesData = {};
-        Object.keys(salesByDate)
-          .sort((a, b) => {
-            const hourA = parseInt(a.split(':')[0]);
-            const hourB = parseInt(b.split(':')[0]);
-            return hourA - hourB;
-          })
-          .forEach(key => {
-            sortedData[key] = salesByDate[key];
+      if (showHourlyView) {
+        // Encontrar a primeira e última hora com vendas
+        const hours = Object.keys(salesByDate)
+          .map(time => parseInt(time))
+          .sort((a, b) => a - b);
+
+        if (hours.length > 0) {
+          const firstHour = Math.min(...hours);
+          const lastHour = Math.max(...hours);
+
+          // Criar array apenas com as horas entre a primeira e última venda
+          const sortedData: SalesData = {};
+          for (let hour = firstHour; hour <= lastHour; hour++) {
+            const key = `${hour.toString().padStart(2, '0')}:00`;
+            sortedData[key] = salesByDate[key] || 0;
+          }
+          setSalesData(sortedData);
+        } else {
+          // Se não houver vendas, mostrar apenas a hora atual
+          const currentHour = new Date().getHours();
+          setSalesData({
+            [`${currentHour.toString().padStart(2, '0')}:00`]: 0
           });
-        setSalesData(sortedData);
+        }
       } else {
-        setSalesData(salesByDate);
+        // Para outros períodos, ordenar as datas cronologicamente
+        const sortedData = Object.entries(salesByDate)
+          .sort((a, b) => {
+            const dateA = a[0].split('/').reverse().join('-');
+            const dateB = b[0].split('/').reverse().join('-');
+            return new Date(dateA).getTime() - new Date(dateB).getTime();
+          })
+          .reduce((acc, [date, value]) => {
+            acc[date] = value;
+            return acc;
+          }, {} as SalesData);
+        setSalesData(sortedData);
       }
     }
-  }, [sales, products, timeFilter]);
+  }, [sales, products, startDate, endDate, selectedPeriod]);
 
-  const filterSalesByTime = (sales: Sale[]) => {
-    const now = new Date();
+  const filterSalesByDateRange = (sales: Sale[]) => {
+    if (!startDate || !endDate) {
+      return sales;
+    }
+
     return sales.filter(sale => {
       const saleDate = new Date(sale.created_at);
-      switch (timeFilter) {
-        case 'daily':
-          return saleDate.toDateString() === now.toDateString();
-        case 'weekly':
-          const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-          return saleDate >= weekAgo;
-        case 'monthly':
-          return saleDate.getMonth() === now.getMonth() && 
-                 saleDate.getFullYear() === now.getFullYear();
-        case 'yearly':
-          return saleDate.getFullYear() === now.getFullYear();
-        default:
-          return true;
-      }
+      return saleDate >= startDate && saleDate <= endDate;
     });
   };
 
@@ -158,17 +234,16 @@ const Dashboard = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold text-gray-800">{t('dashboard.title')}</h1>
-        <select
-          value={timeFilter}
-          onChange={(e) => setTimeFilter(e.target.value)}
-          className="rounded-lg border-gray-300 shadow-sm"
-        >
-          <option value="daily">{t('dashboard.filters.daily')}</option>
-          <option value="weekly">{t('dashboard.filters.weekly')}</option>
-          <option value="monthly">{t('dashboard.filters.monthly')}</option>
-          <option value="yearly">{t('dashboard.filters.yearly')}</option>
-          <option value="all">{t('dashboard.filters.allTime')}</option>
-        </select>
+        <DateRangePicker
+          startDate={startDate}
+          endDate={endDate}
+          selectedPeriod={selectedPeriod}
+          onChange={(dates) => {
+            setStartDate(dates[0]);
+            setEndDate(dates[1]);
+          }}
+          onPeriodChange={handlePeriodChange}
+        />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -205,7 +280,8 @@ const Dashboard = () => {
               <Tooltip 
                 formatter={(value: number) => `${t('common.currency')} ${value.toFixed(2)}`}
                 labelFormatter={(label) => {
-                  if (timeFilter === 'daily') {
+                  const showHourlyView = isOneDayView(startDate, endDate, selectedPeriod);
+                  if (showHourlyView) {
                     const hour = parseInt(label.split(':')[0]);
                     const nextHour = (hour + 1) % 24;
                     return `${label} - ${nextHour.toString().padStart(2, '0')}:00`;

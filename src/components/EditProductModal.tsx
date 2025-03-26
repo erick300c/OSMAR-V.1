@@ -14,7 +14,19 @@ const EditProductModal: React.FC<EditProductModalProps> = ({ isOpen, onClose, pr
   const { t } = useTranslation();
   const { updateProduct } = useProducts();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<{
+    name: string;
+    category: 'beverages' | 'tobacco' | 'accessories' | 'snacks' | 'foodAndSweets';
+    subcategory: string;
+    barcode: string;
+    cost_price: number;
+    selling_price: number;
+    quantity: number;
+    supplier: string;
+    min_stock_level: number;
+    unit: 'unit' | 'liter' | 'gram';
+    image_url: string;
+  }>({
     name: product.name,
     category: product.category,
     subcategory: product.subcategory || '',
@@ -94,6 +106,8 @@ const EditProductModal: React.FC<EditProductModalProps> = ({ isOpen, onClose, pr
                 <option value="beverages">{t('products.categories.beverages')}</option>
                 <option value="tobacco">{t('products.categories.tobacco')}</option>
                 <option value="accessories">{t('products.categories.accessories')}</option>
+                <option value="snacks">{t('products.categories.snacks')}</option>
+                <option value="foodAndSweets">{t('products.categories.foodAndSweets')}</option>
               </select>
             </div>
 
