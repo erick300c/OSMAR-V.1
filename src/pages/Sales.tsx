@@ -17,7 +17,7 @@ const Sales = () => {
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [selectedPeriod, setSelectedPeriod] = useState('all');
   const [paymentFilter, setPaymentFilter] = useState('all');
-  const { sales, loading, deleteSale } = useSales();
+  const { sales, loading, deleteSale, refresh } = useSales();
 
   const handlePeriodChange = (period: string) => {
     setSelectedPeriod(period);
@@ -204,7 +204,10 @@ const Sales = () => {
 
       <NewSaleModal
         isOpen={isNewSaleModalOpen}
-        onClose={() => setIsNewSaleModalOpen(false)}
+        onClose={() => {
+          setIsNewSaleModalOpen(false);
+          refresh();
+        }}
       />
 
       {selectedSale && (
@@ -213,6 +216,7 @@ const Sales = () => {
           onClose={() => {
             setIsEditSaleModalOpen(false);
             setSelectedSale(null);
+            refresh();
           }}
           sale={selectedSale}
         />

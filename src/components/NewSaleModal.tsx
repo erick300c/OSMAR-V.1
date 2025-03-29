@@ -76,6 +76,9 @@ const NewSaleModal: React.FC<NewSaleModalProps> = ({ isOpen, onClose }) => {
           priceAtSale: item.priceAtSale
         }))
       });
+      setItems([{ productId: '', quantity: 1, priceAtSale: 0 }]);
+      setSearchTerms(['']);
+      setPaymentMethod('card');
       onClose();
     } catch (error) {
       console.error('Failed to create sale:', error);
@@ -171,7 +174,10 @@ const NewSaleModal: React.FC<NewSaleModalProps> = ({ isOpen, onClose }) => {
                     </div>
 
                     <div className="w-24 text-right">
-                      ${(item.quantity * item.priceAtSale).toFixed(2)}
+                      {new Intl.NumberFormat('pt-BR', {
+                        style: 'currency',
+                        currency: 'BRL'
+                      }).format(item.quantity * item.priceAtSale)}
                     </div>
 
                     {items.length > 1 && (
@@ -220,7 +226,10 @@ const NewSaleModal: React.FC<NewSaleModalProps> = ({ isOpen, onClose }) => {
 
             <div className="mt-6 flex justify-between items-center">
               <div className="text-lg font-semibold">
-                {t('common.total')}: ${calculateTotal().toFixed(2)}
+                {t('common.total')}: {new Intl.NumberFormat('pt-BR', {
+                  style: 'currency',
+                  currency: 'BRL'
+                }).format(calculateTotal())}
               </div>
               <div className="flex gap-4">
                 <button

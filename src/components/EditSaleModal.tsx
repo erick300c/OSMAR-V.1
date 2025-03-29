@@ -128,10 +128,18 @@ const EditSaleModal: React.FC<EditSaleModalProps> = ({ isOpen, onClose, sale }) 
                       <div className="relative">
                         <input
                           type="text"
-                          value={searchTerms[index]}
-                          onChange={(e) => updateSearch(index, e.target.value)}
+                          value={item.productId ? 
+                            products.find(p => p.id === item.productId)?.name || '' : 
+                            searchTerms[index]
+                          }
+                          onChange={(e) => {
+                            if (!item.productId) {
+                              updateSearch(index, e.target.value);
+                            }
+                          }}
                           placeholder={t('sales.searchProduct')}
                           className="w-full rounded-lg border-gray-300 shadow-sm pr-8"
+                          readOnly={!!item.productId}
                         />
                         <Search className="absolute right-2 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
                       </div>
@@ -180,7 +188,10 @@ const EditSaleModal: React.FC<EditSaleModalProps> = ({ isOpen, onClose, sale }) 
                     </div>
 
                     <div className="w-24 text-right">
-                      ${(item.quantity * item.priceAtSale).toFixed(2)}
+                      {new Intl.NumberFormat('pt-BR', {
+                        style: 'currency',
+                        currency: 'BRL'
+                      }).format(item.quantity * item.priceAtSale)}
                     </div>
 
                     {items.length > 1 && (
@@ -223,7 +234,10 @@ const EditSaleModal: React.FC<EditSaleModalProps> = ({ isOpen, onClose, sale }) 
 
             <div className="mt-6 flex justify-between items-center">
               <div className="text-lg font-semibold">
-                {t('common.total')}: ${calculateTotal().toFixed(2)}
+                {t('common.total')}: {new Intl.NumberFormat('pt-BR', {
+                  style: 'currency',
+                  currency: 'BRL'
+                }).format(calculateTotal())}
               </div>
               <div className="flex gap-4">
                 <button
